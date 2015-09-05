@@ -1,0 +1,61 @@
+Getting ready for google interview. 
+
+
+
+library{serv,client}
+====================
+
+This program works with one caveat. When the server uploads a file to the
+client, the client pipes result through the /usr/bin/less, a nice program
+for reading and searching text files. But once the end of the file is 
+buffered in less, it freezes. Ctrl-C cleanly kills the misbehaving less
+and closes the socket. I wish I had time to find out what's wrong. 
+
+An idea - to handle really long messages that exceed the size of the buffer,
+just verify that the total length of the message is not zero mod the size 
+of the buffer. That is, if msg_length mod buffer_length = 0, then pad the 
+message with some number of zeros ('\0'). Then the following loop:
+
+while ((bytes_received = read(sockfd, buffer, buffer_length)) < buffer_length
+                                                         && bytes_received != -1) 
+{
+  toal_bytes_received += bytes_received; 
+  do_something_with(buffer)
+}
+
+will terminate. 
+
+A last note: it is possible for the bytes in two separate calls to read() 
+to be read on the other end at the same time in recv(). I learned this when
+I ran it between Greg and I's computers. For example: 
+{
+  send(sockfd, "OK\n", 2, 0); 
+  send(sockfd, "\tgo", strlen(send_data) 0); 
+}
+    and 
+{
+  if ((bytes_read = recv(sockfd, receive_data, BUFFLENGTH - 1)) 
+                                                           == -1)
+    die("connection severed"); 
+  receive_data[bytes_received] = '\0'; 
+  printf("%s\n", receive_data); 
+}
+    could result in 
+OK
+      go
+
+as output. All this to say that messages should always be acknowledged with
+an actual packet, say send(sockfd, "ACK", 3, 0); 
+
+
+hash
+====
+
+Hash is a generic hashtable data structure using open addressing and linear
+probing. I haven't implemented Hash::remove() or resizing. 
+
+sort
+====
+
+This contains my favorite O(n log n) sorting algorithms: heapsort and a 
+randomized quicksort. I wish I had time to do the analysis of qsort(). 

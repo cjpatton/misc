@@ -1,0 +1,62 @@
+Distributed computing and web wervice architecture
+==================================================
+
+LAMP is the common "software stack" for web services. Here's the 
+version I know how to implement. 
+ 
+ (L)inux - I know Ubuntu Server well I'd say. 
+
+ (A)pache - `sudo apt-get install apache2`. Static content is dumped to 
+            /var/www. I'd like to learn how to set up SSL/TLS for 
+            authenticated usage (https). 
+
+ (M)ySQL - `sudo apt-get install mysql-server`. I've also worked with 
+           PostgreSQL and found it better for certain things; but as far
+           as customizing the configuration, MySQL is my first choice. 
+
+ (P)ython - I know how to create and serve dynamic content using the 
+            Python-Flask framework. WSGI ("web server gateway interface") 
+            can be used to interface Flask-based programs to the Apache
+            server. `sudo apt-get install libapache2-mod-wsgi`. Move the 
+            application to /var/www/MyApp. Remove any "app.run()"s in the 
+            top-level program. Create a file in that directory called 
+            MyApp.wsgi: 
+
+----------MyApp.wsgi-----------------------------------------------------------
+from MyApp import app as application
+-------------------------------------------------------------------------------
+
+            Finally, add the following Apache configuraiton file to 
+            /etc/apache2/sites-available:
+
+----------qraat.ucdavis.edu----------------------------------------------------
+<VirtualHost *>
+  ServerName qraat.ucdavis.edu
+
+  WSGIDaemonProcess MyApp user=qraat group=qraat threads=5
+  WSGIScriptAlias / /var/www/MyApp/MyApp.wsgi
+
+  <Directory /var/www/MyApp>
+    WSGIProcessGroup MyApp
+    WSGIApplicationGroup %{GLOBAL}
+    Order deny,allow
+    Allow from all
+  </Directory>
+</VirtualHost>
+-------------------------------------------------------------------------------
+
+Content found in the database is served via Python in this case. If I 
+wanted to use something like memcached between MySQL and the client, 
+I would need to install and learn the memcached API for Python. This 
+directory contains example usage of the C API. 
+
+The point here is: I'm trying to imagine how to implement a scalable 
+web service distributed across many machines. memcached provides the 
+service of a distributed hash table, which maintains content in 
+memory while reducing request latency and maximizing load balancing. 
+The purpose of this system is to cache content and avoid disk 
+accesses. I wonder what technology I could use to distribute a 
+database? MySQL or PostgreSQL must have interfaces to things like
+GFS or the like.
+
+Google's BigTable is, however, a totally different ball game. 

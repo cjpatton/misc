@@ -1,0 +1,178 @@
+Christopher Patton
+University of California, Davis
+Computer Science
+ECS 240 - Karl Levitt
+May 2012
+
+This code comprises an interpreter for the toy programming language called
+Pelican, specified formally in the book "Formal Syntax and Semantics of 
+Programming Languages" by Addison and Wesley. It parses the language from a 
+formal grammar (in BNF) and verifies it through via  denotational 
+semantics. 
+
+Pelican is a superset of a simpler language called Wren that adds syntax and 
+semantics for procedures and scopes. In this implementation, Pelican is 
+extended to include the continuation semantics (gotos) of Gull. 
+
+Here and in the code, I attempt to document exhaustively which features of 
+Pelican I have left unimplemented, as well as implementation-specific nuances
+and potential sources of bugs.
+
+
+FILES
+-----
+main.sml  . . . . . . . top level of the interpreter
+semantics.sml . . . . . signature specifying semantic domains/equations and 
+                        auxillary functions
+interpreter.sml . . . . structure implementing SEMANTICS
+syntax.sml  . . . . . . signature specifying the the parser
+parser.sml  . . . . . . implements SYNTAX
+grammar.sml . . . . . . the BNF for Pelican
+common.sml  . . . . . . functions used all over the place
+token.c . . . . . . . . the "tokenizer" splits all the tokens in a Pelican 
+                        program on their own line
+example/  . . . . . . . directory with some sample Pelican code
+
+
+COMPILING and RUNNING 
+---------------------
+Except for the tokenizer (token.c), the interpreter is written in Standard 
+ML and compiled with SML/NJ. To compile, typing
+
+ $ sml main.sml
+
+will compile a "heap image" for your computers' architecturce, which is 
+combined with the SML/NJ runtime environment to run the program. Next, do
+
+ $ gcc -o token token.c
+ $ ./pelican foo.w
+
+to tokenize, parse, and run the program foo. The directory contains the code 
+as well as some sample programs with the suffix .w (for "Wren"). 
+
+
+SOME SYNTACTIC DIFFERENCES 
+--------------------------
+Note that this interpreter has some syntactic differences form the formal 
+definition found in Addison/Wesley. In particular, functions may have an
+arbitrary number of arguments, and their invokation must be followed by 
+paranthesis (ie. foo(), bar(b, 23, false), etc). Also, block declarations 
+are formally a list of identifiers and denotable domains. Each variable
+or procedure declaration must be followed by a semicolon. For example, 
+
+program guy is
+    var a : integer;
+    var b : integer;
+    procedure dude () is begin
+        a := 2; 
+    end; 
+begin 
+       ... 
+end 
+
+Similarily, the series of commands in a block must all be followed by 
+semicolons, except for while-do, if-then, and if-then-else statements:
+
+program guy is 
+       ...
+begin
+    a := -1; 
+    if a < 0 then
+        guy() 
+    else 
+        a := a + b; 
+    end if
+    bar(a, -4, true);
+end
+
+Lastly, the keyword "write" takes a single variable as an 
+argument (as opposed to an integer or boolean expression). 
+The reason for this is purely laziness. It wouldn't take
+much to generalize this.
+
+Currently, read and write only work on integer values.
+
+
+MISSING FEATURES
+----------------
+There are two features pertaining to Pelican that I neglected to implement:
+nested declare-blocks, as in
+
+ program foo is 
+  ... 
+ begin 
+  ... 
+    declare 
+        var flag : boolean;
+    begin 
+     ...
+    end
+ end
+
+and constants, as in
+
+ program foo is 
+    const a = 5; 
+ begin ... 
+
+The declare block would be quite simple. I'd represent it as a command 
+syntactically and run 'perform' when it is executed. In denotational semantics:
+execute [[ DeclareBlock(block) ]] env, sto = perform [[ block ]] env, sto. 
+I've already completed the semantics for constants; I just haven't implemented 
+them syntactically. See the semantic domain in semantics.sml.
+
+
+CONTINUATION SEMANTICS
+----------------------
+Gotos/labels function a bit differently in my implementation than in the book.
+Syntactically, a label in a program is a command comprised of the label name
+and the rest of the program. This definition is recursive, in that a label 
+can be a command in the "rest of the program" associated with a label. For
+example,
+
+ one: skip; 
+ two: 
+      end
+
+will be parsed as [(Label("one", [Skip, Label("two",[])])] in ML. In the 
+semantic world, when declaring the environment while performing a block, the
+interpreter will look ahead for the labels in the block, descending 
+recursively. This causes problems when a goto to label outside the local 
+block is executed; the goto will begin execution at the new label to the 
+end of the program, then it will continue executing from the place it was 
+called in the function. See "examples/gull_bug.w" to see this in action. 
+
+Given time, I would change gotos/labels syntactically to not be recursive. 
+Instead, a parsed block will contain a list of Labels and their corresponding
+"rest of programs". I would parse the above code snippet as:
+
+ [Label("one", [Skip]), Label("two")]
+
+I believe this would eliminate this bug.  
+
+
+TODO
+----
+
+Syntax
+ * const 
+ * Better error handling. For now, it just says "Syntax Error!"
+ * improve efficiency. See parser.sml:4
+ * write IntExpr/BoolExpr
+ * VariableList
+
+Semantics
+ * const (elaborate function)
+ * It would be cool to have a return statement for functions. 
+
+Other
+ * Can only input positive integers! See getInt() in common.sml
+ * allow comments, modify token.c
+ * rewrite the tokenizer in ML (replace token.c)?
+ * print strings
+
+Bugs
+ * labels: don't allow labels to be renamed (see interpreter.sml:114)
+ * routines: local variables dangle in store. See interpreter.sml:228 
+ * I don't like that funciton declarations must be followed by semicolon. 
+ * parser.sml: change isVar to isIdentifier überall

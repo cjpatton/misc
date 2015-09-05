@@ -1,0 +1,25 @@
+Emacs commands:
+C = <Ctrl>
+M = <Alt) (right-alt is better) 
+
+C-x C-c        ... exit emacs
+C-a            ... go to beginning of line
+C-k            ... kill to end of line
+C-x C-s        ... save current buffer 
+C-x C-f        ... open new or existing file
+M-x compile    ... run make 
+M-x linum-mode ... turn on line numbers 
+C-x x          ... kill current buffer 
+C-x u          ... undo  
+
+To make emacs display line number FOREVER, add the following to ~/.emacs:
+(global-linum-mode t)
+
+C-space        ... set beginning of selected region. Use arrows to select. 
+                   Hitting it again will toggle it. 
+C-w            ... cut region 
+M-w            ... copy region 
+C-y            ... paste region
+
+M-! acpi       ... check battery life
+

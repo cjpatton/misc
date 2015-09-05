@@ -1,0 +1,94 @@
+#!/usr/bin/perl
+# timestamp 
+# Chris Patton
+# John Muir Institute ~4 Sep 2012 
+# 
+# Update a program's "last edited" time in the comments. 
+# Commented lines containing a date of the format '[tilda] day month 
+# year' will be updated to the current date. Input is a list of files.
+# 
+
+use strict; 
+
+my $usage = "usage: $0 program.c [-oh]"; 
+my $help = "$usage
+-o          pipe to STDOUT
+If no program is specified, pipe from STDIN
+and assume it's a C source or header.\n";
+
+# options
+my $in; 
+my $out; 
+while ($_ = shift) {
+  if (/^(-o|--stdout)$/) {
+    $out = $_; 
+
+  } elsif (/^(-h|--help)$/) {
+    die $help; 
+
+  } elsif (/^-.*$/) {
+    die "error: unknown option $_\n"; 
+
+  } else {
+    open( STDIN, $_ ) or die "error: couldn't read file\n"; 
+    $in = $_; 
+  }
+}
+
+if (defined $in and $out !~ /^(-o|--stdout)$/) {
+  open( STDOUT, ">$in.tmp" ) or die $!;
+}
+
+# programming language (comment type)
+my $start;
+my $end;
+if ($in =~ /^.+\.(h|c|cpp|cxx|m|H|C)$/) { # C/C++
+  $start = '/\\*';
+  $end = '\\*/';
+
+} elsif ($in =~ /^.+\.(pl|py|sh)$/) {   # Perl/Python/sh. 
+  $start = "#";                         # use hashbang on line 1 TODO
+  $end = "\n";      
+
+} elsif ($in =~ /^.+\.sml$/) {
+  $start = "\\(\\*"; 
+  $end = "\\*\\)"; 
+
+} else {
+  $start = '/\\*'; # default to C/C++
+  $end = '\\*/';
+}
+
+# timestamp string
+my ($sec, $min, $hour, $mday, $mon, $year, $wday, $yday, $isdst) = 
+                                                     localtime(time); 
+my @abbr = qw( Jan Feb March April May June July Aug Sep Oct Nov Dec );
+
+my $date = "$mday $abbr[$mon] ".sprintf("%02d", ($year + 1900));
+
+
+# timestamp
+my $comment = 0; 
+while( $_ = <STDIN> ) {
+  if (/($start)/) {
+    $comment = 1;
+  }
+
+  if ($comment == 1) {
+    s/~[0-9]{1,2} (Jan|Feb|Mar|April|May|June|July|Aug|Sep|Oct|Nov|Dec) [0-9]{4}/~$date/; 
+  }
+  print $_;
+
+  if (/($end)/) {
+    $comment = 0; 
+  } 
+}
+
+close STDIN;
+close STDOUT; 
+
+if (defined $in) {
+  rename "$in.tmp", $in;
+}
+
+

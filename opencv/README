@@ -1,0 +1,5 @@
+Chris ~3 April 2013
+
+I'd like to implement Salamander in OpenCV rather than ITK. I'm testing out 
+filters and stuff here. cc.cpp does connected component analysis for binary
+images!! 
