@@ -12,20 +12,17 @@ Plug 'https://github.com/fatih/vim-go.git'
 
 call plug#end()
 
-
 syntax on
-filetype plugin indent on
-
 set hlsearch
-"set expandtab
-"set shiftwidth=4
-"set softtabstop=4
-set tabstop=4
 set autoindent
+set history=50
+set ruler
 set number
 set nocompatible
 set backupcopy=yes
-set bs=2
 set viminfo='20,\"50
-set history=50
-set ruler
+
+filetype plugin on
+autocmd FileType * set tabstop=2|set shiftwidth=2|set expandtab 
+autocmd FileType python set tabstop=4|set shiftwidth=4|set expandtab
+autocmd FileType go set tabstop=4|set shiftwidth=4|set noexpandtab
