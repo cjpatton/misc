@@ -3,7 +3,7 @@ package main
 
 import (
 	"crypto/rand"
-	enc "encoding/ascii85"
+	enc "encoding/base64"
 	"fmt"
 	"os"
 )
@@ -18,8 +18,8 @@ func main() {
 		fmt.Fprintf(os.Stderr, "couldn't read %d bytes for some reason", bytes)
 	}
 
-	encoder := enc.NewEncoder(os.Stdout)
+	encoder := enc.NewEncoder(enc.RawStdEncoding, os.Stdout)
 	defer encoder.Close()
-
 	encoder.Write(key)
+	fmt.Println()
 }
