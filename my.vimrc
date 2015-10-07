@@ -9,10 +9,13 @@
 call plug#begin('~/.vim/plugged')
 
 Plug 'https://github.com/fatih/vim-go.git'
+Plug 'https://github.com/ntpeters/vim-better-whitespace.git'
 
 call plug#end()
 
 syntax on
+set background=dark
+colorscheme solarized
 set hlsearch
 set autoindent
 set history=50
