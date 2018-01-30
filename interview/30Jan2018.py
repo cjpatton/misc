@@ -30,12 +30,20 @@ def binsert(root, val):
         else:
             binsert(root[1], val)
 
-def bsort(root, S):
+def bdfs(root, S):
     if root[0] is not None:
-        bsort(root[0], S)
+        bdfs(root[0], S)
     S.append(root.val)
     if root[1] is not None:
-        bsort(root[1], S)
+        bdfs(root[1], S)
+
+def bsort(X):
+    root = Node(X[0])
+    for x in X[1:]:
+        binsert(root, x)
+    S = []
+    bdfs(root, S)
+    return S
 
 def qsort(X):
     if len(X) < 2:
@@ -65,10 +73,9 @@ if __name__ == '__main__':
     S = qsort(X)
     print S
 
-    # Create a binary tree from X.
-    root = Node(X[0])
-    for x in X[1:]:
-        binsert(root, x)
-    T = []
-    bsort(root, T)
+    # Sort X using a binary tree.
+    T = bsort(X)
     print T
+
+# Given a list of integers A and an integer x, find i that minimizes
+# abs(A[i] - x)
