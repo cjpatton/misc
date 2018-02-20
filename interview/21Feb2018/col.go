@@ -9,14 +9,14 @@ import (
 
 type Strings struct {
 	idx      map[int]string
-	lst      []int
+	lst      []float64
 	unsorted int
 }
 
-func (st *Strings) Insert(s string, n int) {
+func (st *Strings) Insert(s string, n float64) {
 	if st.idx == nil {
 		st.idx = make(map[int]string)
-		st.lst = make([]int, 0)
+		st.lst = make([]float64, 0)
 		st.unsorted = 0
 	}
 	st.idx[len(st.lst)] = s
@@ -24,7 +24,7 @@ func (st *Strings) Insert(s string, n int) {
 	st.unsorted++
 }
 
-func (st *Strings) NearestTo(n int) (s string) {
+func (st *Strings) NearestTo(n float64) (s string) {
 	if len(st.lst) == 0 {
 		return ""
 	}
@@ -37,20 +37,20 @@ func (st *Strings) NearestTo(n int) (s string) {
 	return st.idx[i]
 }
 
-func bsearch(X []int, i, j, n int) int {
+func bsearch(X []float64, i, j int, n float64) int {
 	if j == i {
 		return i
 	} else if j-i == 1 {
-		if math.Abs(float64(n-X[i])) < math.Abs(float64(n-X[j])) {
+		if math.Abs(n-X[i]) < math.Abs(n-X[j]) {
 			return i
 		}
 		return j
 	}
 
 	p := (j + i) >> 1
-	a := math.Abs(float64(n - X[i]))
-	b := math.Abs(float64(n - X[p]))
-	c := math.Abs(float64(n - X[j]))
+	a := math.Abs(n - X[i])
+	b := math.Abs(n - X[p])
+	c := math.Abs(n - X[j])
 
 	if n < X[p] {
 		if a < b { // closer to i than p
@@ -66,14 +66,14 @@ func bsearch(X []int, i, j, n int) int {
 	return p // p is a closest point
 }
 
-func (st *Strings) linearNearestTo(n int) string {
+func (st *Strings) linearNearestTo(n float64) string {
 	if len(st.lst) == 0 {
 		return ""
 	}
 	i := 0
 	m := st.lst[0]
 	for j, x := range st.lst {
-		if math.Abs(float64(x-n)) < math.Abs(float64(m-n)) {
+		if math.Abs(x-n) < math.Abs(m-n) {
 			i = j
 			m = x
 		}
