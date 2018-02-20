@@ -8,8 +8,9 @@ import (
 // abs(X[i] - y).
 
 type Strings struct {
-	idx map[int]string
-	lst []int
+	idx    map[int]string
+	lst    []int
+	sorted bool
 }
 
 func (st *Strings) Insert(s string, n int) {
@@ -19,9 +20,14 @@ func (st *Strings) Insert(s string, n int) {
 	}
 	st.idx[len(st.lst)] = s
 	st.lst = append(st.lst, n)
+	st.sorted = false
 }
 
 func (st *Strings) NearestTo(n int) (s string) {
+	return st.linearNearestTo(n)
+}
+
+func (st *Strings) linearNearestTo(n int) (s string) {
 	if len(st.lst) == 0 {
 		return ""
 	}

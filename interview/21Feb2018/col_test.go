@@ -5,6 +5,7 @@ import (
 	"testing"
 )
 
+// A dumb metric for strings.
 func score(s string) int {
 	var d []byte
 	if len(s) < 3 {
@@ -16,12 +17,13 @@ func score(s string) int {
 }
 
 func TestInsertsNearest(t *testing.T) {
-	total := 20
+	targetCount := 1000
+	testCount := 10000
 	length := 10
 
 	st := new(Strings)
 	buf := make([]byte, length)
-	for i := 0; i < total; i++ {
+	for i := 0; i < targetCount; i++ {
 		if _, err := rand.Read(buf); err != nil {
 			t.Fatal("rand.Read() fails:", err)
 		}
@@ -30,8 +32,21 @@ func TestInsertsNearest(t *testing.T) {
 		}
 		s := string(buf)
 		st.Insert(s, score(s))
-		t.Logf("%s", s)
 	}
 
-	t.Logf("nearest: %s", st.NearestTo(score("hella")))
+	for i := 0; i < testCount; i++ {
+		if _, err := rand.Read(buf); err != nil {
+			t.Fatal("rand.Read() fails:", err)
+		}
+		for j, x := range buf {
+			buf[j] = byte((int(x) % 25) + 97) // Not uniform
+		}
+		s := string(buf)
+		n := score(s)
+		got := st.NearestTo(n)
+		want := st.linearNearestTo(n)
+		if got != want {
+			t.Errorf("expected %s, got %s (n=%d)", want, got, n)
+		}
+	}
 }
