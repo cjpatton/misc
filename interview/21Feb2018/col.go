@@ -28,16 +28,17 @@ func (st *Strings) NearestTo(n float64) (s string) {
 	if len(st.lst) == 0 {
 		return ""
 	}
-	if st.unsorted > 0 {
+	if st.unsorted > 10 { // TODO(cjpatton) See if this actually helpful.
+		st.qsort(0, len(st.lst))
+	} else if st.unsorted > 0 {
 		st.isort(st.unsorted)
-		st.unsorted = 0
 	}
-
-	i := bsearch(st.lst, 0, len(st.lst)-1, n)
+	st.unsorted = 0
+	i := search(st.lst, 0, len(st.lst)-1, n)
 	return st.idx[i]
 }
 
-func bsearch(X []float64, i, j int, n float64) int {
+func search(X []float64, i, j int, n float64) int {
 	if j == i {
 		return i
 	} else if j-i == 1 {
@@ -54,14 +55,14 @@ func bsearch(X []float64, i, j int, n float64) int {
 
 	if n < X[p] {
 		if a < b { // closer to i than p
-			return bsearch(X, i, p-1, n)
+			return search(X, i, p-1, n)
 		}
-		return bsearch(X, i+1, p, n)
+		return search(X, i+1, p, n)
 	} else if n > X[p] {
 		if c < b { // closer to j than p
-			return bsearch(X, p+1, j, n)
+			return search(X, p+1, j, n)
 		}
-		return bsearch(X, p, j-1, n)
+		return search(X, p, j-1, n)
 	}
 	return p // p is a closest point
 }
@@ -79,6 +80,26 @@ func (st *Strings) linearNearestTo(n float64) string {
 		}
 	}
 	return st.idx[i]
+}
+
+func (st *Strings) qsort(i, j int) {
+	if j > i+1 {
+		st.swap(i, (j+i)>>1)
+		l := i + 1
+		r := j
+		for l < r {
+			if st.lst[l] < st.lst[i] {
+				l++
+			} else {
+				r--
+				st.swap(l, r)
+			}
+		}
+		l--
+		st.swap(l, i)
+		st.qsort(i, l)
+		st.qsort(r, j)
+	}
 }
 
 func (st *Strings) isort(ct int) {

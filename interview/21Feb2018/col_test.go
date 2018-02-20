@@ -17,8 +17,8 @@ func metric(s string) float64 {
 }
 
 func TestInsertsNearest(t *testing.T) {
-	targetCount := 1000
-	testCount := 1000
+	targetCount := 10000
+	testCount := 10000
 	length := 10
 
 	// Make a bunch of random, easy-to-read strings.
