@@ -17,8 +17,8 @@ func score(s string) int {
 }
 
 func TestInsertsNearest(t *testing.T) {
-	targetCount := 100
-	testCount := 1
+	targetCount := 10
+	testCount := 100
 	length := 10
 
 	st := new(Strings)
