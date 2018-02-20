@@ -19,7 +19,7 @@ func TestInsertsNearest(t *testing.T) {
 	total := 20
 	length := 10
 
-	st := NewStrings()
+	st := new(Strings)
 	buf := make([]byte, length)
 	for i := 0; i < total; i++ {
 		if _, err := rand.Read(buf); err != nil {

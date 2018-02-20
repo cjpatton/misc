@@ -12,14 +12,11 @@ type Strings struct {
 	lst []int
 }
 
-func NewStrings() *Strings {
-	st := new(Strings)
-	st.idx = make(map[int]string)
-	st.lst = make([]int, 0)
-	return st
-}
-
 func (st *Strings) Insert(s string, n int) {
+	if st.idx == nil {
+		st.idx = make(map[int]string)
+		st.lst = make([]int, 0)
+	}
 	st.idx[len(st.lst)] = s
 	st.lst = append(st.lst, n)
 }
