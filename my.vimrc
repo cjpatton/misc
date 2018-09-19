@@ -25,7 +25,7 @@ set hlsearch
 set autoindent
 set history=50
 set ruler
-set number
+set number relativenumber
 set nocompatible
 set backupcopy=yes
 set viminfo='20,\"50
