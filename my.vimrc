@@ -1,8 +1,7 @@
 "Go plugins.
 " Plug-in manager: https://github.com/junegunn/vim-plug
 " Download:
-"  curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
-"      https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+"  curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 " Then do:
 "  :PlugInstall
 "
@@ -14,6 +13,7 @@ call plug#begin('~/.vim/plugged')
 
 Plug 'https://github.com/fatih/vim-go.git'
 Plug 'https://github.com/ntpeters/vim-better-whitespace.git'
+Plug 'https://github.com/FStarLang/VimFStar', {'for': 'fstar'}
 
 call plug#end()
 
@@ -41,3 +41,5 @@ command B w | !bibtex main
 cabbrev wp P
 
 set spelllang=en_us spell
+hi clear SpellBad
+hi SpellBad cterm=underline
