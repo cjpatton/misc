@@ -95,7 +95,6 @@ def p4(total, s):
 def p4s0(array, low, high, target):
   return 0
 
-
 if __name__ == '__main__':
   print 'p1', 'pass' if p1(1, 1000, p1s1) else 'fail'
   print 'p2', 'pass' if p2(1, 1000, p2s0) else 'fail'
