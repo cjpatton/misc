@@ -1,17 +1,11 @@
 import random
-# How do you implement a postorder traversal algorithm?
-# How do you traverse a binary tree in postorder traversal without recursion?
-# How are all leaves of a binary search tree printed?
-# How do you count a number of leaf nodes in a given binary tree?
-# How do you perform a binary search in a given array?
-
 
 class Node:
   def __init__(self, val):
     self.val = val
     self.left = None
     self.right = None
-    self.visited = False
+    self.x = False
 
   def insert(self, val):
     if val < self.val:
@@ -33,6 +27,30 @@ class Node:
     elif self.right != None:
       return self.right.find(val)
     return False
+
+  def visited(self, p):
+    return self.x is not p
+
+  def visit(self, p):
+    self.x = not p
+
+  def count(self):
+    ct = 0
+    stack = [self]
+    p = self.x
+    while len(stack) > 0:
+      top = stack.pop()
+      if top.visited(p) or (top.left == None and top.right == None):
+        top.visit(p)
+        ct += 1
+      else:
+        top.visit(p)
+        if top.right != None:
+          stack.append(top.right)
+        stack.append(top)
+        if top.left != None:
+          stack.append(top.left)
+    return ct
 
   def preordered(self, array):
     array.append(self.val)
@@ -60,12 +78,13 @@ class Node:
 
   def inordered_it(self, array):
     stack = [self]
+    p = self.x
     while len(stack) > 0:
       top = stack.pop()
-      if top.visited:
+      if top.visited(p):
         array.append(top.val)
       else:
-        top.visited = True
+        top.visit(p)
         if top.left == None and top.right == None:
           stack.append(top)
         else:
@@ -76,8 +95,9 @@ class Node:
             stack.append(top.left)
 
 if __name__ == '__main__':
+  ct = random.randint(50,150)
   tree = Node(random.randint(0,100))
-  for _ in range(100):
+  for _ in range(ct-1):
     tree.insert(random.randint(0,100))
 
   # P1 How do you traverse a given binary tree in preorder without recursion?
@@ -95,3 +115,5 @@ if __name__ == '__main__':
   tree.inordered_it(got)
   print 'p2', 'pass' if got == expected else 'fail'
 
+  # P3 How do you count a number of leaf nodes in a given binary tree?
+  print 'p2', 'pass' if ct == tree.count() else 'fail'
