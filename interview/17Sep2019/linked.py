@@ -1,5 +1,4 @@
 import random
-# How are duplicate nodes removed in an unsorted linked list?
 # How do you find the length of a singly linked list?
 # How do you find the third node from the end in a singly linked list?
 # How do you find the sum of two linked lists using Stack?
@@ -101,7 +100,6 @@ def p4(s):
   data = [ random.randint(0,10) for _ in range(100) ]
   return list(set(data)) == list(sorted(linked_to_array(s(make_linked(data)))))
 
-
 def p4s1(linked):
   unique_vals = set()
   prv = None
@@ -116,8 +114,25 @@ def p4s1(linked):
     head = head.child
   return linked
 
+# P5 How do you find the third node from the end in a singly linked list?
+def p5(s):
+  data = [ i for i in range(100) ]
+  return data[-3] == s(make_linked(data)).val
+
+def p5s1(head):
+  last = [ None, None, None ]
+  curr = head
+  while curr != None:
+    last[0] = last[1]
+    last[1] = last[2]
+    last[2] = curr
+    curr = curr.child
+  return last[0]
+
+
 if __name__ == '__main__':
   print 'p1', 'pass' if p1(p1s1) else 'fail'
   print 'p2', 'pass' if p2(p2s1) else 'fail'
   print 'p3', 'pass' if p3(p3s1) else 'fail'
   print 'p4', 'pass' if p4(p4s1) else 'fail'
+  print 'p5', 'pass' if p5(p5s1) else 'fail'
