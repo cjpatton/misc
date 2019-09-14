@@ -40,8 +40,11 @@ print are_palindromes('racecar', 'racecar')
 # P3 How do you find all permutations of a string?
 #
 # Here's Heap's algorithm.
-#
-# TODO Wrap my head around this.
+def swap(A, i, j):
+  tmp = A[i]
+  A[i] = A[j]
+  A[j] = tmp
+
 def generate(k, A):
   if k == 1:
     yield A
@@ -49,17 +52,14 @@ def generate(k, A):
     for Y in generate(k-1, A):
       yield Y
     for i in range(k-1):
-      if k % 2 == 0: # even
-        j = i
+      if k&1 == 0: # even
+        swap(A, i, k-1)
       else:
-        j = 0
-      tmp = A[j]
-      A[j] = A[k-1]
-      A[k-1] = tmp
+        swap(A, 0, k-1)
       for Y in generate(k-1, A):
         yield Y
 
-x = '12'
+x = '1234'
 for Y in generate(len(x), list(x)):
   print ''.join(Y)
 

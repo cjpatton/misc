@@ -1,4 +1,5 @@
 import random
+import sys
 
 def qsort0(A):
   if len(A) < 3:
@@ -17,12 +18,10 @@ def qsort0(A):
   return qsort0(L) + P + qsort0(R)
 
 def swap(A, i, j):
-  tmp = A[i]
-  A[i] = A[j]
-  A[j] = tmp
-  #A[i] ^= A[j]
-  #A[j] ^= A[i]
-  #A[i] ^= A[j]
+  if i != j:
+    A[i] ^= A[j]
+    A[j] ^= A[i]
+    A[i] ^= A[j]
 
 def qsort1(A, l, r):
   if r > l + 1:
