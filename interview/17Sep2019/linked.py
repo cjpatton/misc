@@ -1,7 +1,4 @@
 import random
-# How do you find the length of a singly linked list?
-# How do you find the third node from the end in a singly linked list?
-# How do you find the sum of two linked lists using Stack?
 
 class Node:
   def __init__(self, val):

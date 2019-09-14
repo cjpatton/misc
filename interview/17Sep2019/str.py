@@ -1,6 +1,4 @@
 import random
-# How do you check if two strings are a rotation of each other?
-# How do you check if a given string is a palindrome?
 
 alphabet = 'abcdefghijklmnopqrstuvwxyz'
 
@@ -24,8 +22,8 @@ def print_dups(x):
 
 print_dups(gen(alphabet, 100))
 
-# P2 How do you check if two strings are anagrams of each other?
-def are_anagrams(x, y):
+# P2 How do you check if two strings are palindromes of each other?
+def are_palindromes(x, y):
   if len(x) != len(y):
     return False
   for i in range(len(x)):
@@ -33,11 +31,11 @@ def are_anagrams(x, y):
       return False
   return True
 
-print are_anagrams('he', 'llo')
-print are_anagrams('x', 'y')
-print are_anagrams('racxcar', 'racecar')
-print are_anagrams('x', 'x')
-print are_anagrams('racecar', 'racecar')
+print are_palindromes('he', 'llo')
+print are_palindromes('x', 'y')
+print are_palindromes('racxcar', 'racecar')
+print are_palindromes('x', 'x')
+print are_palindromes('racecar', 'racecar')
 
 # P3 How do you find all permutations of a string?
 #
@@ -122,3 +120,22 @@ def rev_words(x):
   return y
 
 print rev_words(' this is applebees and it is the best, please?')
+
+# P7 How do you check if two strings are a rotation of each other?
+def is_rotation(x, y):
+  if len(x) != len(y):
+    return False
+  for r in range(len(x)):
+    rot = True
+    for i in range(len(x)):
+      j = (r+i) % len(x)
+      if x[i] != y[j]:
+        rot = False
+        break
+    if rot:
+      return True
+  return False
+
+
+print 'pass' if is_rotation('hello', 'ohelf') == False else 'fail'
+print 'pass' if is_rotation('hello', 'ohell') == True else 'fail'

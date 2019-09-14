@@ -37,10 +37,10 @@ def swap(A, i, j):
   A[j] = tmp
 
 def _qsort(A, i, j): # Qsort in-place
-  if j > i + 1: 
+  if j > i + 1:
     swap(A, i, (j + i) / 2)
     l = i + 1
-    r = j 
+    r = j
     while l < r:
       if A[l] < A[i]:
         l += 1
