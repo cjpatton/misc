@@ -52,5 +52,19 @@ def moves(n):
         M[x] = d
   return M[n]
 
-for x in [7, 8, 113, 123, 234]:
+for x in [7, 8, 113, 123, 234, 2**16]:
   print moves(x)
+
+
+def coins(n, denom):
+  M = [0] * (n+1)
+  S = [1]
+  while len(S) > 0:
+    x = S.pop()
+    if x <= n:
+      M[x] += 1
+      for y in denom:
+        S.append(x+y)
+  return M[n]
+
+print coins(10, [2,5,3,6])
