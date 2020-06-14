@@ -12,9 +12,10 @@
 call plug#begin('~/.vim/plugged')
 
 Plug 'https://github.com/fatih/vim-go.git'
+Plug 'rust-lang/rust.vim'
 "Plug 'https://github.com/ntpeters/vim-better-whitespace.git'
-Plug 'https://github.com/FStarLang/VimFStar', {'for': 'fstar'}
-Plug 'https://github.com/chrisbra/vim-xml-runtime'
+"Plug 'https://github.com/FStarLang/VimFStar', {'for': 'fstar'}
+"Plug 'https://github.com/chrisbra/vim-xml-runtime'
 
 call plug#end()
 
@@ -35,6 +36,8 @@ set viminfo='20,\"50
 "set cursorcolumn
 set lazyredraw
 set tw=80
+
+let g:rustfmt_autosave = 1
 
 autocmd ColorScheme * highlight ExtraWhitespace ctermbg=red guibg=red
 "highlight ExtraWhitespace ctermbg=red guibg=red
