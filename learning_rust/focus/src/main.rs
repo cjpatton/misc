@@ -144,6 +144,14 @@ fn pigify(s: &String) -> String {
     pig
 }
 
+fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
+    if x.len() < y.len() {
+        y
+    } else {
+        x
+    }
+}
+
 fn main() {
     // pp. 147
     //
@@ -162,4 +170,9 @@ fn main() {
     //let data = String::from("Hohenschönhausen.  Dieser Zug endet hier...bitte alle aussteigen!");
     let data = String::from("this sentence is in pig-latin.");
     println!("Second. {}", pigify(&data));
+
+    // Lifetimes and the borrow checker.
+    let x = String::from("abcd");
+    let y = String::from("xyz");
+    println!("{}", longest(x.as_str(), y.as_str()));
 }
