@@ -6,7 +6,8 @@
 " {
 "	"coc.preferences.formatOnSaveFiletypes": [
 "		"rust"
-"	}
+"	],
+"    "rust-analyzer.cargo.features": "all"
 " }
 
 call plug#begin()
